@@ -28,9 +28,8 @@ export class Pawn extends Figure {
     if (target.y === this.cell.y + direction
       && (target.x === this.cell.x + 1 || target.x === this.cell.x - 1)
       && this.cell.isEnemy(target)) {
-      return true;
+      return true
     }
-
     return false;
   }
 
