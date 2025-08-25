@@ -14,6 +14,20 @@ interface BoardProps {
 const BoardComponent: FC<BoardProps> = ({ board, setBoard, currentPlayer, swapPlayer }) => {
   const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
 
+  const updateBoard = useCallback(() => {
+    const newBoard = board.getCopyBoard()
+    setBoard(newBoard)
+  }, [board, setBoard])
+
+  const highlightCells = useCallback(() => {
+    board.highlightCells(selectedCell)
+    updateBoard()
+  }, [board, selectedCell, updateBoard])
+
+  useEffect(() => {
+    highlightCells()
+  }, [highlightCells])
+
   function click(cell: Cell) {
     if (selectedCell && selectedCell !== cell && selectedCell.figure?.canMove(cell)) {
       selectedCell.moveFigure(cell);
@@ -34,20 +48,6 @@ const BoardComponent: FC<BoardProps> = ({ board, setBoard, currentPlayer, swapPl
     }
   }
 
-  const highlightCells = useCallback(() => {
-    board.highlightCells(selectedCell)
-    updateBoard()
-  }, [board, selectedCell])
-
-  useEffect(() => {
-    highlightCells()
-  }, [highlightCells])
-
-  function updateBoard() {
-    const newBoard = board.getCopyBoard()
-    setBoard(newBoard)
-  }
-
   return (
     <div>
       <h3 className='text-color-white'> Current Player: {currentPlayer?.color}</h3>
@@ -66,7 +66,7 @@ const BoardComponent: FC<BoardProps> = ({ board, setBoard, currentPlayer, swapPl
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default BoardComponent;
+export default BoardComponent

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import "./App.css";
 import { Board } from './models/Board';
 import BoardComponent from './components/BoardComponent';
@@ -15,14 +15,14 @@ const App = () => {
   useEffect(() => {
     restart()
     setCurrentPlayer(whitePlayer)
-  }, [])
+  }, [whitePlayer])
 
-  function swapPlayer() {
-    setCurrentPlayer(currentPlayer?.color === Colors.WHITE ? blackPlayer : whitePlayer)
-  }
+  const swapPlayer = useCallback(() => {
+    setCurrentPlayer(current => current?.color === Colors.WHITE ? blackPlayer : whitePlayer)
+  }, [blackPlayer, whitePlayer])
 
   function restart() {
-    const newBoard = new Board();
+    const newBoard = new Board()
     newBoard.initCells()
     newBoard.addFigures()
     setBoard(newBoard)
@@ -37,11 +37,11 @@ const App = () => {
         swapPlayer={swapPlayer}
       />
       <div>
-        <LostFigures title='White figures' figures={board.lostWhiteFigure} />
-        <LostFigures title='Black figures' figures={board.lostBlackFigure} />
+        <LostFigures title='' figures={board.lostWhiteFigure} />
+        <LostFigures title='' figures={board.lostBlackFigure} />
       </div>
     </div>
-  );
-};
+  )
+}
 
 export default App;
